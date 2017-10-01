@@ -4,11 +4,20 @@ import datetime
 import numpy as np
 import pandas as pd
 
+# This will lead to a prime -> guigmatic-requirements building utility
+# overview is given on
+# https://github.com/baskaufs/tdwg-standards/blob/master/files-to-generate-from-prime-csv.txt
 
 def create_term_terms(versions, isdefined_category):
     """Create the ./terms/term.csv file based on the prime file"
 
     pure prototyping ;-)
+
+    Compare to original of
+    https://github.com/baskaufs/tdwg-standards/blob/master/terms/terms.csv
+
+    from pandas.util.testing import assert_frame_equal
+    assert_frame_equal(term_terms_csv_cmp, ref_terms_cmp)
     """
 
     versions["issued"] = pd.to_datetime(versions["issued"])
