@@ -19,7 +19,8 @@ NAMESPACES = {
     'http://rs.tdwg.org/dwc/terms/' : 'dwc',
     'http://purl.org/dc/elements/1.1/' : 'dc',
     'http://purl.org/dc/terms/' : 'dcterms',
-    'http://rs.tdwg.org/dwc/terms/attributes/' : 'tdwgutility'}
+    'http://rs.tdwg.org/dwc/terms/attributes/' : 'tdwgutility',
+    'http://zooarchnet.org/dwc/terms/': 'dwcterms'}
 
 
 class ProvidedTermsError(Exception):
@@ -125,7 +126,7 @@ class DwcDigester(object):
             valid key of the NAMESPACES variable
         """
         if namespace not in NAMESPACES.keys():
-            raise DwcNamespaceError("The namespace url is currently not supported in NAMESPACES")
+            raise DwcNamespaceError("The namespace url is currently not supported in NAMESPACES", namespace)
         return NAMESPACES[namespace]
 
     def get_term_definition(self, term_iri):
@@ -228,7 +229,7 @@ class DwcDigester(object):
         return template_data
 
     def create_html(self, html_template="terms.tmpl",
-                    html_output="../docs/terms/index.md"):
+                    html_output="../docs/index.md"):
         """build html with the processed term info, by filling in the
         tmpl-template
 
@@ -263,7 +264,7 @@ class DwcDigester(object):
         for term in self.versions():
             term_data = self.get_term_definition(term['term_iri'])
             if (term_data["rdf_type"] == "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" and
-                term["flags"] == "simple"):
+                term["flags"] == "extension"):
                 properties.append(term_data["label"])
         return properties
 

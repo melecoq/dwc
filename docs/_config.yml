@@ -3,6 +3,10 @@ title: Darwin Core
 description: Website for the Darwin Core standard.
 url: "https://dwc.tdwg.org"
 
+sass:
+    sass_dir: _scss
+    style: compact
+
 navbar:
   left:
   - text: Terms
@@ -31,7 +35,13 @@ js: >-
 
 # Build settings
 markdown: kramdown
-# theme: tdwg-theme-jekyll
-remote_theme: tdwg/tdwg-theme-jekyll
+#theme: tdwg-theme-jekyll
+#remote_theme: tdwg/tdwg-theme-jekyll
 plugins:
   - jekyll-feed
+defaults:
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "default"

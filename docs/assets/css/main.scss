@@ -1,0 +1,422 @@
+---
+---
+
+// Main SASS file for the theme
+
+// Note: all none-Bootstrap classes are named theme-* so they are easily recognizable
+
+// IMPORTS
+
+@import "../node_modules/bootstrap/scss/_functions.scss"; // Load first to make use of theme-colors()
+@import "_variables.scss"; // Custom variables and overwrites for Bootstrap & Font Awesome variables 
+@import "../node_modules/bootstrap/scss/bootstrap.scss"; // Bootstrap scss
+@import "../node_modules/font-awesome/scss/font-awesome.scss"; // Font Awesome scss
+@import "_pygments.scss"; // GitHub flavoured pygments
+
+
+// GENERAL
+
+body {
+    // Allow long words (e.g. URLs) to wrap, so they don't break out of container
+    word-wrap: break-word;
+    position: relative; // Required for scrollspy
+
+    // Customize some Bootstrap classes
+
+    .btn {
+        white-space: normal; // Wrap button within container
+    }
+}
+
+
+// NAVBAR
+
+// The navbar (<nav class="navbar">) is for the main navigation and has an optional .container.
+// On small screens and when using .navbar-expand (= never collapse navbar), the .navbar-collapse 
+// element will be displayed below the .navbar-brand, can be swipped horizontally and have a reduced
+// font-size. Any opened .dropdown-menu will then be shown within the .navbar.
+
+
+.navbar-expand {
+    @include media-breakpoint-down(sm) {
+        
+        &, & .container, & .container-fluid {
+            flex-direction: column; // In .navbar or its .container, display the child elements
+                                    // (.navbar-brand, .navbar-collapse) above each other
+        }
+        .navbar-collapse {
+            align-items: flex-start!important; // Keep all elements at top on open .dropdown-menu
+            font-size: .875rem;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            
+            .dropdown {
+                // position: static; // Show absolute .dropdown-menu, even if container has 
+                                  // overflow-y: hidden
+            }
+
+            .dropdown-menu { // Stretch to almost full width
+                font-size: .875rem;
+                // left: $grid-gutter-width / 2;
+                // margin-left: auto;
+                // margin-right: auto;
+                position: static;
+                // right: $grid-gutter-width / 2;
+            }
+
+            .form-inline {
+                flex-flow: row; // Force to remain as row
+            }
+        }
+    }
+}
+
+
+// COVER IMAGE
+
+// The cover image is a full width <figure> above the main container, functioning as a visually 
+// pleasing intro to a page/article. It is only used on the main website.
+// The <figure> contains a <div class="jumbotron"> and a <figcaption>. The image itself is a 
+// background-image on the jumbotron, with height set as padding-bottom. The jumbotron has a 
+// container with the h1, summary, tags, metadata of a page/article.
+
+body > figure {
+    margin-bottom: 0;
+    position: relative;
+
+    div.jumbotron {
+        // background-image: different for every page, so set in the template, incl. a variation on 
+        // this gradient css:
+        // linear-gradient(rgba(theme-color("secondary"), 0.25), rgba(theme-color("secondary"), 0.75));
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin-bottom: 0;
+        padding-bottom: 4rem;
+
+        .container {
+            h1 {
+                color: $white;
+                font-size: 3rem;
+                text-shadow: 0.2px 0.2px 1px rgba(theme-color("dark"), 0.75);
+            }
+
+            time {
+                color: theme-color("tertiary");
+                display: block;
+                font-size: $font-size-lg;
+                margin-bottom: $grid-gutter-width / 2;
+            }
+
+            .lead {
+                color: $white;
+                font-size: ($lead-font-size * 1.2);
+                text-shadow: 0.2px 0.2px 1px rgba(theme-color("dark"), 0.75);
+                
+                a {
+                    color: theme-color("tertiary");
+                }  
+            }
+
+            .badge {
+                font-size: 100%;
+                font-weight: 600;
+                margin-bottom: 0.25rem; // In case tags wrap to multiple lines
+                text-transform: lowercase;
+            }
+        }
+    }
+
+    figcaption {
+        background-color: rgba($white, 0.75);
+        bottom: 0;
+        color: $body-color;
+        font-size: $small-font-size;
+        padding: 0 0.5rem;
+        position: absolute;
+        right: 0;
+
+        a {
+            color: $body-color;
+        }
+    }
+}
+
+
+// ALL CONTAINERS
+
+// The main breakpoint in content width is between small and medium screens at ≥768px.
+// Containers on small screens use full width (.container-fluid behaviour) without a jump between
+// .xs and .sm.
+// Containers on medium and up screens jump between .md, .lg and .xs (default bootstrap behaviour) 
+// and have a max-width of 1140px (default bootstrap behaviour). Since 1140px can be quite long for 
+// reading text, most templates use .col-md-3 sidebar and .col-md content in the main container.
+//
+// Note: these rules are applied to all .container, use .container-fluid to make use of full width 
+// on all screen sizes.
+
+.container {
+    @include media-breakpoint-down(sm) {
+        // Use container-fluid behaviour on small screens, so the content (including collapsed 
+        // .theme-sidebar if present) can use the full width. Jump between .xs and .sm will also 
+        // disappear.
+        max-width: 100%!important;
+    }
+}
+
+
+// MAIN CONTAINER
+
+// The main container (<main class="container">) contains the page content directly or is further 
+// devided in a SIDEBAR (col-12 col-md-3 order-md-2 theme-sidebar-primary) and page content 
+// ("col-12 col-md-9 order-md-1").
+
+main.container,
+main.container-fluid {
+    min-height: calc(100vh - 54px); // Viewport height minus medium screen navbar height
+    padding-top: $grid-gutter-width; // Don't stick to top
+    padding-bottom: $grid-gutter-width; // Don't stick to footer
+
+    // Customize some Bootstrap classes
+
+    .lead {
+        margin-bottom: $grid-gutter-width;
+    }
+
+    .media {
+        // Bootstrap class for image left & content right layout, e.g. news items
+        // https://getbootstrap.com/docs/4.0/layout/media-object/
+        padding-bottom: $grid-gutter-width / 2;
+        border-bottom: 1px solid $hr-border-color;
+        margin-bottom: $grid-gutter-width / 2;
+
+        img {
+            height: 150px;
+            margin-right: 2rem;
+            width: 150px;
+        }
+
+        time {
+            font-size: $small-font-size;
+        }
+    }
+
+    .table-sm {
+        font-size: 95%;
+    }
+
+    // Non-Bootstrap elements
+
+    blockquote {
+        border-left: 0.25rem solid $gray-200;
+        color: $gray-600;
+        padding: 0 1rem;
+    }
+
+    h2 {
+        &:not(:first-child):before {
+            // Scrollspy overwrites margin/padding-top, so need to use :before
+            display: block;
+            content: "";
+            margin-top: 2rem; // Extra margin above headers
+        }
+    }
+
+    pre, code {
+        background-color: $gray-200;
+        border-radius: 3px;
+        padding: $kbd-padding-y $kbd-padding-x;
+    }
+
+    pre {
+        font-size: 80%; // Slighty smaller than inline $code-font-size;
+        overflow: auto;
+        
+        code {
+            padding: 0; // Do not pad <code> withing <pre> 
+        }
+    }
+
+    table {
+        code {
+            word-break: normal!important; // Do not unnecessarily wrap code in tables
+        }
+
+        .theme-label {
+            width: 120px; // For Darwin Core term labels
+        }
+    }
+
+    .theme-card-deck {
+        // Apply to .row: mimics Bootstrap .card-deck, stretching cards to equal height, but without
+        // stretching width when there are fewer cards on one row (cards remain equal width).
+
+        div[class*="col"] {
+            display: flex!important;
+            align-items: stretch!important;
+        
+            .card {
+                // Bootstrap class for styled content containers, e.g. subpages as images
+                // https://getbootstrap.com/docs/4.0/components/card/
+                margin-bottom: $grid-gutter-width; // Add spacing between rows of cards
+            }
+        }
+    }
+}
+
+
+// SIDEBAR 
+
+// The sidebar is used to display the table of contents (with scrollspy) for pages and articles, and 
+// to navigate news by year on index.html and period_archive.html. There is also a template 
+// sidebar.html to display child pages two levels deep, but it is not used by the main website: 
+// subpages are displayed as .cards instead.
+// 
+// The sidebar should allow any number of levels (tested for three), but subitems are only shown if 
+// the parent item has class .active, keeping the navigation contained.
+// 
+// On small screens the sidebar will be full width (.col-12) with nav collapsed (.collapse).
+// On medium screens the sidebar will be vertical (.col-md-4) and appear on the right (.order-md-2)
+// of the content, which will take up remaining space (.col-md).
+// 
+// To allow colour customization, all sidebar CSS is a mixin, which can be targetted with the class
+// .theme-sidebar-x, with "x" being one of the theme-colors (e.g. "primary").
+
+@mixin theme-sidebar($sidebar-color) {
+    color: $sidebar-color;
+
+    @include media-breakpoint-down(sm) { // Collapsed sidebar
+        border-bottom: 1px solid rgba($sidebar-color, 0.5);
+        margin-bottom: $grid-gutter-width;
+        padding: 0.5rem;
+
+        nav {
+            margin-top: 0.5rem; // Add space between menu button and nav
+        }
+    }
+
+    @include media-breakpoint-up(md) { // Sticky sidebar: scrolls with page, then sticks
+        position: sticky;
+        top: 2rem;
+        height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+
+    .btn {
+        color: $sidebar-color;
+
+        &:focus,
+        &.focus {
+            box-shadow: none; // Disable focus
+        }
+    }
+
+    nav {
+        // Sidebar navigation: only nav in .theme-sidebar-x
+        @include media-breakpoint-up(md) {
+            display: block!important; // Don't collapse nav on wider screens (= overwrite .collapse)
+        }
+
+        .nav {
+            .nav {
+                display: none; // Hide 2nd level nav by default
+                font-size: 90%;
+                padding-left: 0.5rem;
+            
+                &:last-child {
+                    margin-bottom: 0.5rem; // Leave some more room for last element of 2nd level nav
+                }
+            }
+        }
+
+        .nav-item {
+            &.theme-divider-above {
+                margin-top: 0.5rem;
+                border-top: 1px solid rgba($sidebar-color, 0.5);
+                padding-top: 0.5rem;
+            }
+        
+            &.theme-divider-below {
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid rgba($sidebar-color, 0.5);
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        .nav-link {
+            // .d-flex .justify-content-between .align-items-center are only required for 
+            // aligning the .fa-chavron-down correctly
+            color: $sidebar-color;
+            padding: 0.25rem 1rem;
+
+            &.active {
+                background-color: $sidebar-color;
+                color: $white;
+            }
+
+            &.active + .nav,
+            &.active-parent + .nav {
+                display: block; // Show 2nd level nav if one its pages or parent is active
+            }
+        }
+    }
+}
+
+@each $color, $value in $theme-colors {
+    .theme-sidebar-#{$color} {
+        @include theme-sidebar($value);
+    }
+}
+
+
+// FOOTER
+
+// The footer (<footer>) contains links that should appear on the bottom of every page.
+
+body > footer {
+    background-color: theme-color("secondary");
+    color: $white;
+    font-size: 0.95rem;
+    padding: $grid-gutter-width / 2 0;
+
+    a, a:hover {
+        color: $white;
+
+        &.nav-link {
+            padding: 0.5rem;
+        }
+    }
+
+    .fa-inverse {
+        color: theme-color("secondary");
+    }
+
+    .theme-license {
+        color: $gray-400;
+        margin-top: $grid-gutter-width / 3;
+        border-top: 1px solid $hr-border-color;
+        padding-top: $grid-gutter-width / 3;
+        font-size: $small-font-size;
+        text-align: center;
+    }
+}
+
+
+// TIPUESEARCH
+
+// Search html content is generated by tipuesearch.min.js.
+// Rather than mimicking bootstrap by overwriting tipuesearch CSS classes, bootstrap classes are 
+// added with jQuery in the search template. tipuesearch.css is not loaded.
+
+.tipue_search_content_bold {
+    font-weight: $font-weight-bold;
+}
+
+#tipue_search_foot_boxes {
+    a:not([href]):not([tabindex]) {
+        color: theme-color("primary"); // Overwrite reboot
+    }
+}
